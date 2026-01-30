@@ -1,0 +1,148 @@
+You are an expert Android engineer. Build a production-quality Android app in Kotlin using Jetpack Compose and Material 3.
+
+APP NAME
+- MoodPulse (placeholder name, can be changed)
+
+CORE REQUIREMENTS (MUST MATCH EXACTLY)
+1) Main screen shows multiple big emojis in a beautiful grid (6–12 emojis).
+2) User saves mood by LONG PRESS (press-and-hold) on an emoji.
+   - While holding: show a circular progress indicator around/over the emoji that fills.
+   - Save triggers when hold completes (e.g., 800ms).
+   - If user releases before completion, do NOT save.
+   - Provide haptic feedback on successful save.
+   - On save: show a subtle checkmark + “Saved” snackbar/toast-like feedback.
+3) The user can set mood 3 times per day: Morning, Afternoon, Night.
+   - Exactly 1 entry per slot per day.
+   - Default selected slot depends on current local time:
+       * 05:00–11:59 -> Morning
+       * 12:00–17:59 -> Afternoon
+       * 18:00–04:59 -> Night
+   - If an entry already exists for the selected slot today, prevent saving and show a friendly message (“Already saved for Morning. View calendar or edit.”).
+   - Allow “Edit” for the existing slot by overwriting (but only if user taps an explicit “Edit mode” toggle OR confirms in a dialog). Keep default behavior as “prevent duplicate”.
+4) Calendar analysis screen:
+   - Monthly calendar grid.
+   - Each day cell can display up to 3 small colored dots (or tiny emoji) representing Morning/Afternoon/Night moods.
+   - Tap a day to open a bottom sheet showing the 3 slots with the saved emojis and timestamps (or “Not set”).
+   - Simple stats section above calendar: current streak, longest streak, weekly average mood score (optional).
+   - Must work offline.
+5) Navigation:
+   - Bottom navigation with 2 tabs: Home, Calendar.
+6) Data persistence:
+   - Use Room database.
+   - Store mood entries: date, slot, emoji id/string, color, createdAt timestamp.
+   - Enforce unique constraint per (date, slot).
+   - Provide DAO queries for:
+     * insert/update entry
+     * get entry for date+slot
+     * get all entries for a month range
+     * get last N days entries
+     * compute streak (days where all 3 slots exist)
+7) Architecture:
+   - Use MVVM with clean separation: data (Room), domain (use cases), presentation (ViewModels, Compose UI).
+   - Use Kotlin coroutines + Flow.
+   - No external heavy frameworks; Hilt optional but preferred for DI. If you use Hilt, configure it fully.
+8) UI/Design:
+   - Modern, minimal, “beautiful”.
+   - Emoji cards: rounded corners, soft shadows, subtle gradients/halos.
+   - Smooth animations on press/hold completion.
+   - Support dark mode.
+   - Use Material 3 theming.
+9) Quality:
+   - Provide a complete working project structure (packages, files).
+   - Ensure it compiles.
+   - Include comments where needed.
+   - Avoid placeholder “TODO” for core features.
+
+EMOJI SET (DEFINE IN CODE)
+- Provide a data class MoodOption(id, emoji, label, color).
+- Include at least:
+  Happy 🙂, Neutral 😐, Sad 😢, Angry 😡, Love 😍, Tired 😴, Excited 🤩, Calm 😌, Anxious 😰
+- Map each to a stable color (store as ARGB Long or hex string).
+
+SCORING (OPTIONAL BUT NICE)
+- Map mood option to numeric score 1–5 for simple averages.
+- Use this to compute weekly/monthly average on calendar screen.
+
+EDIT MODE (DETAIL)
+- By default, if user tries to save for a slot already set, show dialog:
+  Title: “Already saved”
+  Message: “You already saved your Morning mood. Do you want to replace it?”
+  Buttons: Cancel / Replace
+- If Replace -> overwrite that entry in Room.
+
+HOME SCREEN DETAILS
+- Top area: slot selector (3 pills).
+- Under: emoji grid (2–3 columns depending on screen width).
+- Each emoji card:
+  - Shows emoji large (48–64sp).
+  - On long press: start hold progress ring animation.
+  - On completion: call ViewModel.saveMood(slot, option).
+  - Disabled state if slot already saved and not in replace mode (or still allow but confirm).
+- Also show small “Today” summary row: Morning/Afternoon/Night with small emoji or empty placeholders.
+
+CALENDAR SCREEN DETAILS
+- Month header with prev/next arrows.
+- Calendar grid with weekday labels.
+- Each day cell:
+  - day number
+  - 0–3 markers (dots or mini emojis) for slots.
+  - highlight today.
+- Tapping day opens bottom sheet:
+  - Shows date
+  - Shows 3 rows: Morning, Afternoon, Night
+  - Each row shows emoji + time or “Not set”
+  - Optional: allow quick replace from sheet (select emoji -> hold to save also acceptable)
+
+DATA / ROOM DETAILS
+- Use java.time.LocalDate and store as TEXT via TypeConverter.
+- Slot enum stored as TEXT.
+- createdAt stored as Long (epoch millis).
+- Room entities:
+  MoodEntryEntity
+- Domain model:
+  MoodEntry
+- Mapper between entity and domain.
+
+USE CASES
+- SaveMoodUseCase(date, slot, moodOption)
+- GetDayMoodsUseCase(date)
+- GetMonthMoodsUseCase(yearMonth)
+- ObserveTodayUseCase()
+- ComputeStreakUseCase()
+
+STREAK DEFINITION
+- A “complete day” means all 3 slots have entries.
+- Current streak: number of consecutive complete days ending today (or yesterday if today incomplete; choose one and document it; prefer ending at last complete day).
+- Longest streak: max consecutive complete days.
+
+DEPENDENCIES
+- Compose BOM
+- Room
+- Coroutines
+- (Optional) Hilt
+- Material3
+- java.time (core)
+- Avoid external calendar libraries; implement calendar grid manually.
+
+DELIVERABLE OUTPUT
+Provide:
+1) Project package structure
+2) Full code for each file (MainActivity, navigation, theme, models, database, dao, repository, use cases, viewmodels, composables)
+3) build.gradle (module) dependencies and plugins
+4) Any required AndroidManifest changes
+5) Clear instructions to run
+
+IMPORTANT
+- No pseudo-code. Output real Kotlin code.
+- Make sure imports are correct.
+- Compose UI must be functional.
+- Room DB must be working.
+- Flows must be collected properly with collectAsStateWithLifecycle (add lifecycle-runtime-compose dependency).
+
+Start by proposing the folder structure, then output each file with its path header like:
+--- app/src/main/java/.../FileName.kt ---
+<code>
+
+Then gradle files.
+
+Do NOT ask me questions; make reasonable choices to complete the project.
