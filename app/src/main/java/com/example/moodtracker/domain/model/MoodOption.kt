@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 data class MoodOption(
     val id: String,
-    val emoji: String,
+    val imageResName: String,
     val label: String,
     val colorArgb: Long,
     val score: Int? = null,
@@ -14,9 +14,9 @@ data class MoodOption(
 
 object MoodOptions {
     val all: List<MoodOption> = listOf(
-        MoodOption(id = "good", emoji = "🌟", label = "Good", colorArgb = 0xFFFFD700, score = 5),
-        MoodOption(id = "normal", emoji = "✨", label = "Normal", colorArgb = 0xFFB0BEC5, score = 3),
-        MoodOption(id = "bad", emoji = "🌑", label = "Bad    ", colorArgb = 0xFF37474F, score = 1),
+        MoodOption(id = "good", imageResName = "mood_slight_smile", label = "Good", colorArgb = 0xFFFFD700, score = 5),
+        MoodOption(id = "normal", imageResName = "mood_sligh_smirk", label = "Normal", colorArgb = 0xFFB0BEC5, score = 3),
+        MoodOption(id = "bad", imageResName = "mood_slight_frowning", label = "Bad    ", colorArgb = 0xFF37474F, score = 1),
     )
 
     fun byId(id: String): MoodOption? = all.firstOrNull { it.id == id }

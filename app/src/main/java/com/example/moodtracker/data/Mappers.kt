@@ -7,7 +7,7 @@ fun MoodEntryEntity.toDomain(): MoodEntry = MoodEntry(
     date = date,
     slot = slot,
     moodId = moodId,
-    emoji = emoji,
+    imageResName = imageResName,
     colorArgb = colorArgb,
     createdAtEpochMillis = createdAt,
 )

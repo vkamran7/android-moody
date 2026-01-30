@@ -1,6 +1,7 @@
 package com.example.moodtracker.presentation.home
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,11 +26,13 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -325,7 +328,7 @@ fun FloatingEmoji(
             }
         }
         
-        // Glass Sphere with Emoji
+        // Glass Sphere with mood image
         Surface(
             shape = CircleShape,
             color = Color.White.copy(alpha = 0.08f),
@@ -334,14 +337,24 @@ fun FloatingEmoji(
                 .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape)
                 .shadow(12.dp, CircleShape, spotColor = option.color)
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Text(
-                    text = option.emoji,
-                    fontSize = 44.sp,
-                    modifier = Modifier.graphicsLayer {
-                        rotationZ = driftX * 0.5f
-                    }
-                )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val context = LocalContext.current
+                val resId = context.resources.getIdentifier(option.imageResName, "drawable", context.packageName)
+                if (resId != 0) {
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = option.label,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .fillMaxSize(0.88f)
+                            .graphicsLayer {
+                                rotationZ = driftX * 0.5f
+                            }
+                    )
+                }
             }
         }
     }
@@ -377,7 +390,16 @@ private fun TodaySummarySection(
                     contentAlignment = Alignment.Center
                 ) {
                     if (opt != null) {
-                        Text(text = opt.emoji, fontSize = 28.sp)
+                        val context = LocalContext.current
+                        val resId = context.resources.getIdentifier(opt.imageResName, "drawable", context.packageName)
+                        if (resId != 0) {
+                            Image(
+                                painter = painterResource(resId),
+                                contentDescription = opt.label,
+                                contentScale = ContentScale.FillBounds,
+                                modifier = Modifier.fillMaxSize(0.85f)
+                            )
+                        }
                     } else {
                         Box(modifier = Modifier.size(6.dp).background(Color.White.copy(alpha = 0.1f), CircleShape))
                     }

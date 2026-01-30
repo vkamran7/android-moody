@@ -48,7 +48,7 @@ class HomeViewModel(
         observeToday(),
         isSaving,
     ) { slot, entries, saving ->
-        val bySlot = entries.associate { it.slot to (resolveOption(it.moodId) ?: MoodOption(it.moodId, it.emoji, it.emoji, it.colorArgb)) }
+        val bySlot = entries.associate { it.slot to (resolveOption(it.moodId) ?: MoodOption(it.moodId, it.imageResName, it.moodId, it.colorArgb)) }
         HomeUiState(
             date = today,
             selectedSlot = slot,

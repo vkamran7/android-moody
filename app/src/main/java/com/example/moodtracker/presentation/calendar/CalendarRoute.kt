@@ -1,5 +1,6 @@
 package com.example.moodtracker.presentation.calendar
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -278,7 +282,16 @@ private fun DaySlotRow(slot: MoodSlot, entry: MoodEntry?) {
             Text("Not set", color = MaterialTheme.colorScheme.onSurfaceVariant)
         } else {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(entry.emoji, style = MaterialTheme.typography.titleLarge)
+                val context = LocalContext.current
+                val resId = context.resources.getIdentifier(entry.imageResName, "drawable", context.packageName)
+                if (resId != 0) {
+                    Image(
+                        painter = painterResource(resId),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
                 Text(entry.localTimeString(), color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }

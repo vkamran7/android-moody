@@ -19,7 +19,7 @@ class MoodRepository(
                 date = date,
                 slot = slot,
                 moodId = option.id,
-                emoji = option.emoji,
+                imageResName = option.imageResName,
                 colorArgb = option.colorArgb,
                 createdAt = createdAtMillis,
             ),
